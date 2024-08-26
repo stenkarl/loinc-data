@@ -1,0 +1,196 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>dev.ikm.tinkar</groupId>
+    <artifactId>loinc-data</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>loinc-starter-data</artifactId>
+  <packaging>jar</packaging>
+
+  <name>loinc-starter-data</name>
+  <url>http://maven.apache.org</url>
+
+
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <tinkar-starter-data.version>1.0.0</tinkar-starter-data.version>
+    <tinkar-composer.version>1.0.0-SNAPSHOT</tinkar-composer.version>
+    <loinc-starter-data.version>1.0.0</loinc-starter-data.version>
+  </properties>
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>composer</artifactId>
+      <version>${tinkar-composer.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>entity-provider</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>integration</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>executor-provider</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>tinkar-core</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>data-ephemeral-provider</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>data-spinedarray-provider</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>search-provider</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>language-extensions</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.loinc</groupId>
+      <artifactId>loinc-starterdata</artifactId>
+      <version>1.8.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.loinc</groupId>
+      <artifactId>loinc-origin</artifactId>
+      <version>1.8.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.loinc</groupId>
+      <artifactId>loinc-transformer-api</artifactId>
+      <version>1.8.0-SNAPSHOT</version>
+    </dependency>
+
+  </dependencies>
+</dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>starter-data-builder</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>data-spinedarray-provider</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>entity-provider</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>executor-provider</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>composer</artifactId>
+      <version>${tinkar-composer.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.uuid</groupId>
+      <artifactId>java-uuid-generator</artifactId>
+      <version>4.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+      <dependency>
+          <groupId>dev.ikm.tinkar</groupId>
+          <artifactId>common</artifactId>
+          <version>${tinkar-core.version}</version>
+          <scope>compile</scope>
+      </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>starter-data-builder</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>integration</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>dev.ikm.tinkar.data</groupId>
+              <artifactId>tinkar-starter-data</artifactId>
+              <version>${tinkar-starter-data.version}</version>
+              <classifier>pb</classifier>
+              <type>zip</type>
+              <overWrite>false</overWrite>
+              <outputDirectory>${project.build.directory}/data</outputDirectory>
+            </artifactItem>
+<!--            <artifactItem>-->
+<!--              <groupId>dev.ikm.tinkar.data</groupId>-->
+<!--              <artifactId>loinc-starter-data</artifactId>-->
+<!--              <version>${loinc-starter-data.version}</version>-->
+<!--              <type>csv</type>-->
+<!--              <overWrite>false</overWrite>-->
+<!--              <outputDirectory>${project.build.directory}/data</outputDirectory>-->
+<!--            </artifactItem>-->
+          </artifactItems>
+          <outputDirectory>${project.build.directory}/data</outputDirectory>
+          <overWriteReleases>false</overWriteReleases>
+          <overWriteSnapshots>true</overWriteSnapshots>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

@@ -1,0 +1,21 @@
+Concept,FullyQualifiedName,Synonym,Definition,Origins,Destinations
+Observable Entity,Observable Entity,,,PHENOMENON,
+Attribute,Attribute,,,PHENOMENON,Component; Property; Time Aspect; System; Scale; Method; Order Vs Observation; LOINC Class; LOINC ClassType
+LOINC Number,LOINC Number,LOINC Code,The unique LOINC Code is a string in the format of nnnnnnnn-n.,IDENTIFIER_SOURCE,
+Component,Component,,First major axis-component or analyte,Attribute,
+Property,Property,,"Second major axis-property observed (e.g., mass vs. substance)",Attribute,
+Time Aspect,Time Aspect,,"Third major axis-timing of the measurement (e.g., point in time vs 24 hours)",Attribute,
+System,System,,"Fourth major axis-type of specimen or system (e.g., serum vs urine)",Attribute,
+Scale,Scale,,"Fifth major axis-scale of measurement (e.g., qualitative vs. quantitative)",Attribute,
+Method,Method,,Sixth major axis-method of measurement,Attribute,
+Order Vs Observation,Order Vs Observation,,"Defines term as order only, observation only, or both. A fourth category, Subset, is used for terms that are subsets of a panel but do not represent a package that is known to be orderable. We have defined them only to make it easier to maintain panels or other sets within the LOINC construct. This field reflects our best approximation of the terms intended use; it is not to be considered normative or a binding resolution.",Attribute,Test Orderable; Test Reportable; Test Subset
+Test Orderable,Test Orderable,,Defines term as order only. We have defined them only to make it easier to maintain panels or other sets within the LOINC construct. This field reflects our best approximation of the terms intended use; it is not to be considered normative or a binding resolution.,Order Vs Observation,
+Test Reportable,Test Reportable,,Defines term as observation only. We have defined them only to make it easier to maintain panels or other sets within the LOINC construct. This field reflects our best approximation of the terms intended use; it is not to be considered normative or a binding resolution.,Order Vs Observation,
+Test Subset,Test Subset,,"Subset, is used for terms that are subsets of a panel but do not represent a package that is known to be orderable. We have defined them only to make it easier to maintain panels or other sets within the LOINC construct. This field reflects our best approximation of the terms intended use; it is not to be considered normative or a binding resolution.",Order Vs Observation,
+Example Units (UCUM),Example Units (UCUM),,"The Unified Code for Units of Measure (UCUM) is a code system intended to include all units of measures being contemporarily used in international science, engineering, and business. (www.unitsofmeasure.org) This field contains example units of measures for this term expressed as UCUM units.",PHENOMENON,
+Trial Status,Trial Status,,Concept is experimental in nature. Use with caution as the concept and associated attributes may change.,STATUS_VALUE,
+Discouraged Status,Discouraged Status,,Concept is not recommended for current use. New mappings to this concept are discouraged; although existing may mappings may continue to be valid in context.,STATUS_VALUE,
+"Regenstrief Institute, Inc. Author","Regenstrief Institute, Inc. Author",LOINC Author,"Regenstrief Institute, Inc. Author - The entity responsible for publishing LOINC",AUTHOR,
+LOINC Module,LOINC Module,LOINC Core Module,Module responsible for LOINC,MODULE,
+LOINC Class,LOINC Class,,An arbitrary classification of the terms for grouping related observations together.,Attribute,
+LOINC ClassType,LOINC ClassType,,1=Laboratory class; 2=Clinical class; 3=Claims attachments; 4=Surveys,Attribute,
