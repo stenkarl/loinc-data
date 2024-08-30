@@ -86,8 +86,14 @@ public class LoincStarterData {
     public static final int CLASS_TYPE_INDEX = 13;
     public static final String EXAMPLE_UCUM_UNITS_PATTERN = "Example UCUM Units Pattern";
     public static final int ORDER_OBS_INDEX = 21;
-    public static boolean uucmPatternExampleCreated = false;
-
+    public static final int UUCM_PATTERN_INDEX = 26;
+    public static final String LOINC_TRIAL_STATUS_PATTERN = "LOINC Trial Status Pattern";
+    public static final String LOINC_DISCOURAGED_STATUS_PATTERN = "LOINC Discouraged Status Pattern";
+    public static final String LOINC_CLASS_PATTERN = "LOINC Class Pattern";
+    public static final String TEST_REPORTABLE_MEMBERSHIP_PATTERN = "Test Reportable Membership Pattern";
+    public static final String TEST_SUBSET_MEMBERSHIP_PATTERN = "Test Subset Membership Pattern";
+    public static final String TEST_ORDERABLE_PATTERN = "Test Orderable Pattern";
+    public static final int PART_STATUS_INDEX = 4;
     private final int CONCEPT_INDEX = 0;
     private final int FQN_INDEX = 1;
     private final int SYNOMYM_INDEX = 2;
@@ -100,9 +106,10 @@ public class LoincStarterData {
     private final int destinationPatternNid = TinkarTerm.EL_PLUS_PLUS_STATED_AXIOMS_PATTERN.nid();
 
     private final State status = State.ACTIVE;
-    private final long time = PrimitiveData.PREMUNDANE_TIME;
+    //private final long time = PrimitiveData.PREMUNDANE_TIME;
+    private final long time = System.currentTimeMillis();
     private EntityProxy.Concept author = TinkarTerm.USER;
-    private final EntityProxy.Concept module = TinkarTerm.PRIMORDIAL_MODULE;
+    private EntityProxy.Concept module = TinkarTerm.PRIMORDIAL_MODULE;
     private final EntityProxy.Concept path = TinkarTerm.PRIMORDIAL_PATH;
 
     private final HashMap<String, EntityProxy.Concept> fqnToConceptHashMap = new HashMap<>();
@@ -126,7 +133,6 @@ public class LoincStarterData {
     private ComposerSession session;
     private int conceptCount = 0;
     private int semanticsCreated = 0;
-    private final String loincClassPattern = "LOINC Class Pattern";
 
     public void setDataStore(File dataStore) {
         this.dataStore = dataStore;
@@ -233,9 +239,7 @@ public class LoincStarterData {
 
                         ;
 
-                        //fqnToConceptHashMap.put(fixString(data[PART_FQN_INDEX]),newConcept);
                         fqnToConceptHashMap.put(conceptID, newConcept);
-                        //  }
                     });
 
 
@@ -453,11 +457,10 @@ public class LoincStarterData {
                             int nid = newConcept.nid();
                             reasonOWLexpression(owlString.toString(), nid);
                             addLoincClassSemanticPattern(newConcept, data[CLASSNAME_INDEX], data[CLASS_TYPE_INDEX], starterData);
-                            addUUCMSemanticPattern(newConcept, data[CLASSNAME_INDEX], "Example UUCM String", starterData);
+                            addUUCMSemanticPattern(newConcept, data[UUCM_PATTERN_INDEX], starterData);
                             addLoincTestOrdObservationSemanticPattern(newConcept, data[ORDER_OBS_INDEX], starterData);
                         } catch (NullPointerException nullPointerException) {
                             LOG.error(nullPointerException.getMessage());
-                            //severeErrors++;
                         }
 
                     });
@@ -518,6 +521,7 @@ public class LoincStarterData {
                             reasonOWLexpression(owlString.toString(), nid);
                             addLoincClassSemanticPattern(newConcept, data[CLASSNAME_INDEX], data[CLASS_TYPE_INDEX], starterData);
                             addLoincTestOrdObservationSemanticPattern(newConcept, data[ORDER_OBS_INDEX], starterData);
+                            addUUCMSemanticPattern(newConcept, data[UUCM_PATTERN_INDEX], starterData);
                         } catch (NullPointerException nullPointerException) {
                             LOG.error(nullPointerException.getMessage());
                             //severeErrors++;
@@ -538,7 +542,6 @@ public class LoincStarterData {
             // LOG.info(expression.toString());
             Transaction transaction = new Transaction("LOINC concept " + nid);
             StampPositionRecord stampPositionRecord = StampPositionRecordBuilder.builder().time(Long.MAX_VALUE).pathForPositionNid(path.nid()).build();
-            //StampCoordinateRecord stampCoordinateForPosition = StampCoordinateRecord.make(StateSet.ACTIVE, stampPositions.getFirst());
             StampCoordinateRecord stampCoordinateRecord = StampCoordinateRecordBuilder.builder()
                     .allowedStates(StateSet.ACTIVE)
                     .stampPosition(stampPositionRecord)
@@ -700,7 +703,8 @@ public class LoincStarterData {
                                     .statedNavigation(List.of(newConcept), Collections.singletonList(fqnToConceptHashMap.get("System")))
                                     .build();
                         }
-//
+
+                        addStatusSemanticPatterns(newConcept, data[PART_STATUS_INDEX], starterData);
 
                     });
 
@@ -743,14 +747,17 @@ public class LoincStarterData {
                                     .statedNavigation(List.of(newConcept), List.of(TinkarTerm.STATUS_VALUE))
                                     .build();
                         } else if (String.valueOf(data[ORIGINS_INDEX]).trim().equals(AUTHOR)) {
+                            EntityProxy.Concept baseAuthor = EntityProxy.Concept.make("Author", UUID.fromString("f7495b58-6630-3499-a44e-2052b5fcf06c")); // Author GUID from Tinkar root concept: "f7495b58-6630-3499-a44e-2052b5fcf06c"
                             starterData.concept(newConcept)
-                                    .statedDefinition(Collections.singletonList(TinkarTerm.AUTHOR_FOR_VERSION))
+                                    .statedDefinition(List.of(baseAuthor))
+                                    .statedNavigation(List.of(newConcept), List.of(baseAuthor))
                                     .build();
                         } else if (String.valueOf(data[ORIGINS_INDEX]).trim().equals(MODULE)) {
                             starterData.concept(newConcept)
                                     .statedDefinition(List.of(TinkarTerm.MODULE))
                                     .statedNavigation(List.of(newConcept), List.of(TinkarTerm.MODULE))
                                     .build();
+                            module = newConcept;
                         }
 
                     });
@@ -777,11 +784,11 @@ public class LoincStarterData {
             return;
         }
 
-        //classPatternFields.add(loincClassConcept);
-        //classPatternFields.add(loincClassType);
+        //classPatternFields.add(loincClassConcept.nid());
+        //classPatternFields.add(fixString(loincClassType));
 
         UUIDUtility uuidUtility = new UUIDUtility();
-        PublicId patternPublicId = PublicIds.of(uuidUtility.createUUID(loincClassPattern));
+        PublicId patternPublicId = PublicIds.of(uuidUtility.createUUID(LOINC_CLASS_PATTERN));
         int patternNid = EntityService.get().nidForPublicId(patternPublicId);
         PublicId referencedComponentPublicID = loincConcept.publicId();
         int referencedComponentNid = EntityService.get().nidForPublicId(referencedComponentPublicID);
@@ -795,13 +802,7 @@ public class LoincStarterData {
 
     }
 
-    private void addUUCMSemanticPattern(EntityProxy.Concept loincConcept, String loincClass, String uucmPattern, StarterData starterData) {
-
-        if (uucmPatternExampleCreated)
-            return;
-        else {
-            uucmPatternExampleCreated = true;
-        }
+    private void addUUCMSemanticPattern(EntityProxy.Concept loincConcept, String uucmPattern, StarterData starterData) {
 
         if (loincConcept == null) {
             return;
@@ -809,14 +810,11 @@ public class LoincStarterData {
 
         MutableList<Object> classPatternFields = Lists.mutable.empty();
 
-        EntityProxy.Concept loincClassConcept = fqnToConceptHashMap.get(fixString(loincClass));
-
-        if (loincClassConcept == null) {
+        if (fixString(uucmPattern).isEmpty() || fixString(uucmPattern).isBlank()) {
             return;
         }
 
-        classPatternFields.add(uucmPattern);
-        //classPatternFields.add(loincClassType);
+        classPatternFields.add(fixString(uucmPattern));
 
         UUIDUtility uuidUtility = new UUIDUtility();
         PublicId patternPublicId = PublicIds.of(uuidUtility.createUUID(EXAMPLE_UCUM_UNITS_PATTERN));
@@ -832,6 +830,42 @@ public class LoincStarterData {
 
     }
 
+    private void addStatusSemanticPatterns(EntityProxy.Concept loincPartConcept, String status, StarterData starterData) {
+
+        if (loincPartConcept == null) {
+            return;
+        }
+
+        MutableList<Object> classPatternFields = Lists.mutable.empty();
+        String semanticPattern;
+
+        if (fixString(status).isEmpty() || fixString(status).isBlank()) {
+            return;
+        }
+
+        if (status.toLowerCase().contains("active")) {
+            semanticPattern = LOINC_TRIAL_STATUS_PATTERN;
+            //classPatternFields.add(fqnToConceptHashMap.get("Trial Status").nid());
+        } else if (status.toLowerCase().contains("deprecated")) {
+            semanticPattern = LOINC_DISCOURAGED_STATUS_PATTERN;
+            //classPatternFields.add(fqnToConceptHashMap.get("Discouraged Status").nid());
+        } else return;
+
+        UUIDUtility uuidUtility = new UUIDUtility();
+        PublicId patternPublicId = PublicIds.of(uuidUtility.createUUID(semanticPattern));
+        int patternNid = EntityService.get().nidForPublicId(patternPublicId);
+        PublicId referencedComponentPublicID = loincPartConcept.publicId();
+        int referencedComponentNid = EntityService.get().nidForPublicId(referencedComponentPublicID);
+        PublicId semantic = PublicIds.singleSemanticId(patternPublicId, referencedComponentPublicID);
+        int semanticNid = EntityService.get().nidForPublicId(semantic);
+        UUID primordialUUID = semantic.asUuidArray()[0];
+        int stampNid = EntityService.get().nidForPublicId(starterData.getAuthoringSTAMP());
+
+        writeSemantic(semanticNid, primordialUUID, patternNid, referencedComponentNid, stampNid, classPatternFields);
+
+    }
+
+
     private void addLoincTestOrdObservationSemanticPattern(EntityProxy.Concept loincConcept, String orderObsValue, StarterData starterData) {
 
 
@@ -842,14 +876,14 @@ public class LoincStarterData {
         }
 
         if (orderObsValue.trim().toLowerCase().contains("observation")) {
-            requiredPatterns.add("Test Reportable Pattern");
+            requiredPatterns.add(TEST_REPORTABLE_MEMBERSHIP_PATTERN);
         } else if (orderObsValue.trim().toLowerCase().contains("order")) {
-            requiredPatterns.add("Test Orderable Pattern");
+            requiredPatterns.add(TEST_ORDERABLE_PATTERN);
         } else if (orderObsValue.trim().toLowerCase().contains("both")) {
-            requiredPatterns.add("Test Orderable Pattern");
-            requiredPatterns.add("Test Reportable Pattern");
+            requiredPatterns.add(TEST_ORDERABLE_PATTERN);
+            requiredPatterns.add(TEST_REPORTABLE_MEMBERSHIP_PATTERN);
         } else if (orderObsValue.trim().toLowerCase().contains("subset")) {
-            requiredPatterns.add("Test Subset Membership Pattern");
+            requiredPatterns.add(TEST_SUBSET_MEMBERSHIP_PATTERN);
         } else {
             return;
         }
@@ -921,30 +955,30 @@ public class LoincStarterData {
     }
 
     private void buildLoincPatterns(StarterData starterData, UUIDUtility uuidUtility) {
-        starterData.pattern(EntityProxy.Pattern.make("LOINC Trial Status Pattern", uuidUtility.createUUID("LOINC Trial Status Pattern")))
+        starterData.pattern(EntityProxy.Pattern.make(LOINC_TRIAL_STATUS_PATTERN, uuidUtility.createUUID(LOINC_TRIAL_STATUS_PATTERN)))
                 .meaning(fqnToConceptHashMap.get("Trial Status"))
                 .purpose(TinkarTerm.STATUS_VALUE)
                 .build();
 
-        starterData.pattern(EntityProxy.Pattern.make("LOINC Discouraged Status Pattern", uuidUtility.createUUID("LOINC Discouraged Status Pattern")))
+        starterData.pattern(EntityProxy.Pattern.make(LOINC_DISCOURAGED_STATUS_PATTERN, uuidUtility.createUUID(LOINC_DISCOURAGED_STATUS_PATTERN)))
                 .meaning(fqnToConceptHashMap.get("Discouraged Status"))
                 .purpose(TinkarTerm.STATUS_VALUE)
                 .build();
 
-        starterData.pattern(EntityProxy.Pattern.make("LOINC Class Pattern", uuidUtility.createUUID("LOINC Class Pattern")))
+        starterData.pattern(EntityProxy.Pattern.make(LOINC_CLASS_PATTERN, uuidUtility.createUUID(LOINC_CLASS_PATTERN)))
                 .meaning(fqnToConceptHashMap.get("LOINC Class"))
                 .purpose(fqnToConceptHashMap.get("LOINC Class"))
                 .fieldDefinition(
                         fqnToConceptHashMap.get("LOINC Class"),
                         fqnToConceptHashMap.get("LOINC Class"),
                         TinkarTerm.CONCEPT_TYPE)
-//                .fieldDefinition(
-//                        fqnToConceptHashMap.get("LOINC ClassType"),
-//                        fqnToConceptHashMap.get("LOINC ClassType"),
-//                        TinkarTerm.STRING)
+                .fieldDefinition(
+                        fqnToConceptHashMap.get("LOINC ClassType"),
+                        fqnToConceptHashMap.get("LOINC ClassType"),
+                        TinkarTerm.STRING)
                 .build();
 
-        starterData.pattern(EntityProxy.Pattern.make("Example UCUM Units Pattern", uuidUtility.createUUID("Example UCUM Units Pattern")))
+        starterData.pattern(EntityProxy.Pattern.make(EXAMPLE_UCUM_UNITS_PATTERN, uuidUtility.createUUID(EXAMPLE_UCUM_UNITS_PATTERN)))
                 .meaning(fqnToConceptHashMap.get("Example Units (UCUM)"))
                 .purpose(fqnToConceptHashMap.get("Example Units (UCUM)"))
                 .fieldDefinition(
@@ -953,17 +987,17 @@ public class LoincStarterData {
                         TinkarTerm.STRING)
                 .build();
 
-        starterData.pattern(EntityProxy.Pattern.make("Test Reportable Membership Pattern", uuidUtility.createUUID("Test Reportable Membership Pattern")))
+        starterData.pattern(EntityProxy.Pattern.make(TEST_REPORTABLE_MEMBERSHIP_PATTERN, uuidUtility.createUUID(TEST_REPORTABLE_MEMBERSHIP_PATTERN)))
                 .meaning(fqnToConceptHashMap.get("Test Reportable"))
                 .purpose(TinkarTerm.MEMBERSHIP_SEMANTIC)
                 .build();
 
-        starterData.pattern(EntityProxy.Pattern.make("Test Subset Membership Pattern", uuidUtility.createUUID("Test Subset Membership Pattern")))
+        starterData.pattern(EntityProxy.Pattern.make(TEST_SUBSET_MEMBERSHIP_PATTERN, uuidUtility.createUUID(TEST_SUBSET_MEMBERSHIP_PATTERN)))
                 .meaning(fqnToConceptHashMap.get("Test Subset"))
                 .purpose(TinkarTerm.MEMBERSHIP_SEMANTIC)
                 .build();
 
-        starterData.pattern(EntityProxy.Pattern.make("Test Orderable Pattern", uuidUtility.createUUID("Test Orderable Pattern")))
+        starterData.pattern(EntityProxy.Pattern.make(TEST_ORDERABLE_PATTERN, uuidUtility.createUUID(TEST_ORDERABLE_PATTERN)))
                 .meaning(fqnToConceptHashMap.get("Test Orderable"))
                 .purpose(TinkarTerm.MEMBERSHIP_SEMANTIC)
                 .build();

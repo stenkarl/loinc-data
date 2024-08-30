@@ -1,6 +1,6 @@
 # Title
 
-|| Description about the Project ||
+|| This project creates spined array data for LOINC data ||
 
 ### Team Ownership - Product Owner
 
@@ -10,7 +10,7 @@ Data Team
 
 Required for running this:
 
-1. Download and install Open JDK Java 19
+1. Download and install Open JDK Java 21
 
 ## Building and Running
 
