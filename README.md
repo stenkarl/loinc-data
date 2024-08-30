@@ -20,12 +20,13 @@ Follow the steps below to build and run Komet on your local machine:
 
 2. Change local directory to cloned repo location
 
-3. Enter the following command to build the application:
+3. Enter the following command to build the application: Inside of Intellij run the TestLoincStarterData 
+    and a spined array database will be generated in the generated-sources directory.
 
 Unix/Linux/OSX:
 
 ```bash
-./mvnw clean install
+./mvn clean install
 ```
 
 Windows:
