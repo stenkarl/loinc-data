@@ -18,6 +18,7 @@ open module loinc.starter.data {
    requires dev.ikm.tinkar.schema;
    requires dev.ikm.tinkar.common;
    requires dev.ikm.tinkar.terms;
+   requires dev.ikm.tinkar.provider.spinedarray;
    requires org.slf4j;
 
 }

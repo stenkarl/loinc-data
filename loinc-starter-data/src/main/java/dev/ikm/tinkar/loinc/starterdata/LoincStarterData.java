@@ -20,12 +20,10 @@ import dev.ikm.tinkar.common.id.PublicId;
 import dev.ikm.tinkar.common.id.PublicIds;
 import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.util.uuid.UuidT5Generator;
-import dev.ikm.tinkar.composer.ComposerSession;
-import dev.ikm.tinkar.composer.ComposerSessionManager;
-import dev.ikm.tinkar.composer.template.Definition;
-import dev.ikm.tinkar.composer.template.FullyQualifiedName;
-import dev.ikm.tinkar.composer.template.Synonym;
-import dev.ikm.tinkar.composer.template.USEnglishDialect;
+import dev.ikm.tinkar.composer.Composer;
+import dev.ikm.tinkar.composer.Session;
+import dev.ikm.tinkar.composer.assembler.ConceptAssembler;
+import dev.ikm.tinkar.composer.template.*;
 import dev.ikm.tinkar.coordinate.stamp.*;
 import dev.ikm.tinkar.coordinate.stamp.calculator.Latest;
 import dev.ikm.tinkar.entity.*;
@@ -59,6 +57,7 @@ import java.util.stream.Stream;
 
 import static dev.ikm.tinkar.loinc.starterdata.LoincConstants.REGEX_LINEDATA;
 import static dev.ikm.tinkar.loinc.starterdata.TinkarizerUtility.processHeaders;
+import static dev.ikm.tinkar.terms.TinkarTerm.*;
 
 
 /**
@@ -120,7 +119,7 @@ public class LoincStarterData {
     //public static final File PB_STARTER_DATA = createFilePathInTarget.apply("data/tinkar-starter-data-1.0.0-pb.zip");
 
     public static final File PB_EXPORT_DATA = createFilePathInTarget.apply("data/tinkar-export-data-1.0.0-pb.zip");
-    public static final ComposerSessionManager COMPOSER_SESSION_MANAGER = new ComposerSessionManager();
+    public static final Composer COMPOSER_SESSION_MANAGER = new Composer("LOINC Composer");
 
     UUIDUtility uuidUtility = new UUIDUtility();
     public static List<String> partTypeNames = List.of("COMPONENT", "PROPERTY", "TIME", "SYSTEM", "SCALE", "METHOD", "CLASS", "CLASSTYPE");
@@ -130,7 +129,7 @@ public class LoincStarterData {
 
     private File loincConceptFile = null;
 
-    private ComposerSession session;
+    private Session session;
     private int conceptCount = 0;
     private int semanticsCreated = 0;
 
@@ -169,18 +168,26 @@ public class LoincStarterData {
 
         author = EntityProxy.Concept.make(LOINC_AUTHOR, UUID.nameUUIDFromBytes(LOINC_AUTHOR.getBytes()));
 
-        session = COMPOSER_SESSION_MANAGER.sessionWithStamp(status, time, TinkarTerm.USER, module, path);
+        session = COMPOSER_SESSION_MANAGER.open(status, time, TinkarTerm.USER, module, path);
 
-        session.composeConcept(author)
-                .with(new FullyQualifiedName(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, LOINC_AUTHOR, TinkarTerm.DESCRIPTION_CASE_SENSITIVE)
-                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                .with(new Synonym(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, "LOINC Author", TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                .with(new Definition(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, "Regenstrief Institute, Inc. Author - The entity responsible for publishing LOINC", TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)));
+        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
+                .attach((FullyQualifiedName fqn) -> fqn
+                        .language(ENGLISH_LANGUAGE)
+                        .text("LOINC_AUTHOR")
+                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                .attach((Synonym syn) -> syn
+                        .language(ENGLISH_LANGUAGE)
+                        .text( "LOINC Author")
+                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                .attach((Definition defn) -> defn
+                        .language(ENGLISH_LANGUAGE)
+                        .text("Regenstrief Institute, Inc. Author - The entity responsible for publishing LOINC")
+                        .caseSignificance(CASE_SENSITIVE_EVALUATION))
+        );
+
         stopIngest();
         PrimitiveData.start();
-        session = COMPOSER_SESSION_MANAGER.sessionWithStamp(status, time, author, module, path);
+        session = COMPOSER_SESSION_MANAGER.open(status, time, author, module, path);
 
         fqnToConceptHashMap.put(LOINC_AUTHOR, author);
 
@@ -229,15 +236,25 @@ public class LoincStarterData {
 
                         //if (fqnToConceptHashMap.get(loincLongCommonName) != null) {
                         EntityProxy.Concept newConcept = EntityProxy.Concept.make(conceptID, UUID.nameUUIDFromBytes(conceptID.getBytes()));
-                        session.composeConcept(newConcept)
-                                .with(new FullyQualifiedName(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, loincLongCommonName, TinkarTerm.DESCRIPTION_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Synonym(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, loincLongCommonName, TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Definition(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, loincLongCommonName, TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
 
-                        ;
+                        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
+                                .attach((FullyQualifiedName fqn) -> fqn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text(loincLongCommonName)
+                                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                .attach((Synonym syn) -> syn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text( loincLongCommonName)
+                                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                .attach((Definition defn) -> defn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text(loincLongCommonName)
+                                        .caseSignificance(CASE_SENSITIVE_EVALUATION))
+                                .attach((Identifier identifier) -> identifier
+                                        .identifier(conceptID)
+                                        .source(newConcept))
+
+                        );
 
                         fqnToConceptHashMap.put(conceptID, newConcept);
                     });
@@ -249,7 +266,7 @@ public class LoincStarterData {
 
         stopIngest();
         PrimitiveData.start();
-        session = COMPOSER_SESSION_MANAGER.sessionWithStamp(State.INACTIVE, time, author, module, path);
+        session = COMPOSER_SESSION_MANAGER.open(State.INACTIVE, time, author, module, path);
 
         try (Stream<String> lines = Files.lines(loincConceptFile.toPath())) {
             lines.skip(1) //skip first line, i.e. header line
@@ -262,15 +279,22 @@ public class LoincStarterData {
                         String conceptID = fixString(data[CONCEPT_INDEX]);
 
                         EntityProxy.Concept newConcept = EntityProxy.Concept.make(conceptID, UUID.nameUUIDFromBytes(conceptID.getBytes()));
-                        session.composeConcept(newConcept)
-                                .with(new FullyQualifiedName(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, loincLongCommonName, TinkarTerm.DESCRIPTION_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Synonym(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, loincLongCommonName, TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Definition(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, loincLongCommonName, TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-
-                        ;
+                        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
+                                        .attach((FullyQualifiedName fqn) -> fqn
+                                                .language(ENGLISH_LANGUAGE)
+                                                .text(loincLongCommonName)
+                                                .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                        .attach((Synonym syn) -> syn
+                                                .language(ENGLISH_LANGUAGE)
+                                                .text( loincLongCommonName)
+                                                .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                        .attach((Definition defn) -> defn
+                                                .language(ENGLISH_LANGUAGE)
+                                                .text(loincLongCommonName)
+                                                .caseSignificance(CASE_SENSITIVE_EVALUATION))
+                                        .attach((Identifier identifier) -> identifier
+                                                .identifier(conceptID)
+                                                .source(newConcept)));
 
                         fqnToConceptHashMap.put(conceptID, newConcept);
 
@@ -283,7 +307,7 @@ public class LoincStarterData {
 
         stopIngest();
         PrimitiveData.start();
-        session = COMPOSER_SESSION_MANAGER.sessionWithStamp(State.ACTIVE, time, author, module, path);
+        session = COMPOSER_SESSION_MANAGER.open(State.ACTIVE, time, author, module, path);
 
     }
 
@@ -301,14 +325,24 @@ public class LoincStarterData {
                     )
                     .forEach(data -> {
                         // LOG.info(String.format("%s | %s | %s | %s | %s",data[0], data[1],data[2],data[3],data[4]));
-                        EntityProxy.Concept newConcept = EntityProxy.Concept.make(fixString(data[CONCEPT_INDEX]), UUID.nameUUIDFromBytes(fixString(data[CONCEPT_INDEX]).getBytes()));
-                        session.composeConcept(newConcept)
-                                .with(new FullyQualifiedName(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, fixString(data[PART_FQN_INDEX]), TinkarTerm.DESCRIPTION_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Synonym(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, fixString(data[PART_SYNOMYM_INDEX]), TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Definition(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, fixString(data[PART_SYNOMYM_INDEX]), TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)));
+                        EntityProxy.Concept newConcept = EntityProxy.Concept.make(fixString(data[PART_SYNOMYM_INDEX]), UUID.nameUUIDFromBytes(fixString(data[CONCEPT_INDEX]).getBytes()));
+
+                        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
+                                .attach((FullyQualifiedName fqn) -> fqn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text(fixString(data[PART_FQN_INDEX]))
+                                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                .attach((Synonym syn) -> syn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text( fixString(data[PART_SYNOMYM_INDEX]))
+                                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                .attach((Definition defn) -> defn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text(fixString(data[PART_SYNOMYM_INDEX]))
+                                        .caseSignificance(CASE_SENSITIVE_EVALUATION))
+                                .attach((Identifier identifier) -> identifier
+                                        .identifier(fixString(data[PART_SYNOMYM_INDEX]))
+                                        .source(newConcept)));
 
                         fqnToConceptHashMap.put(fixString(data[PART_FQN_INDEX]), newConcept);
                         fqnToConceptHashMap.put(fixString(data[CONCEPT_INDEX]), newConcept);
@@ -336,15 +370,26 @@ public class LoincStarterData {
                     .forEach(data -> {
 
                         String synonym = getSynonym(data);
+                        String definition = getDefinition(data);
 
                         EntityProxy.Concept newConcept = EntityProxy.Concept.make(data[CONCEPT_INDEX], UUID.nameUUIDFromBytes(data[CONCEPT_INDEX].getBytes()));
-                        session.composeConcept(newConcept)
-                                .with(new FullyQualifiedName(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, data[FQN_INDEX], TinkarTerm.DESCRIPTION_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Synonym(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, synonym, TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Definition(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, data[DEFINITION_INDEX], TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)));
+
+                        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
+                                .attach((FullyQualifiedName fqn) -> fqn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text(data[FQN_INDEX])
+                                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                .attach((Synonym syn) -> syn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text( synonym)
+                                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                .attach((Definition defn) -> defn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text(definition)
+                                        .caseSignificance(CASE_SENSITIVE_EVALUATION))
+                                .attach((Identifier identifier) -> identifier
+                                        .identifier(data[CONCEPT_INDEX])
+                                        .source(newConcept)));
 
                         fqnToConceptHashMap.put(data[CONCEPT_INDEX], newConcept);
 
@@ -365,6 +410,15 @@ public class LoincStarterData {
         addStatedDefinitionAndNavigation();
 
         LOG.info(conceptCount + " LOINC Concepts were created");
+    }
+
+    private String getDefinition(String[] data) {
+        String definition;
+        definition = data[DEFINITION_INDEX];
+        if (definition == null || definition.isEmpty()){
+            definition = " ";
+        }
+        return definition;
     }
 
     private void addStatedDefinitionAndNavigation() {
@@ -951,6 +1005,11 @@ public class LoincStarterData {
         } else {
             synonym = data[SYNOMYM_INDEX];
         }
+
+        if (synonym.isEmpty()){
+            synonym = " ";
+        }
+
         return synonym;
     }
 
@@ -1035,13 +1094,23 @@ public class LoincStarterData {
                     .forEach(data -> {
 
                         EntityProxy.Concept newConcept = EntityProxy.Concept.make(data[CONCEPT_INDEX], UUID.nameUUIDFromBytes(data[CONCEPT_INDEX].getBytes()));
-                        session.composeConcept(newConcept)
-                                .with(new FullyQualifiedName(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, data[FQN_INDEX], TinkarTerm.DESCRIPTION_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Synonym(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, data[SYNOMYM_INDEX], TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)))
-                                .with(new Definition(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.ENGLISH_LANGUAGE, data[DEFINITION_INDEX], TinkarTerm.DESCRIPTION_NOT_CASE_SENSITIVE)
-                                        .with(new USEnglishDialect(EntityProxy.Semantic.make(PublicIds.newRandom()), TinkarTerm.PREFERRED)));
+
+                        session.compose((ConceptAssembler conceptAssembler) -> conceptAssembler
+                                .attach((FullyQualifiedName fqn) -> fqn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text(data[FQN_INDEX])
+                                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                .attach((Synonym syn) -> syn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text( data[SYNOMYM_INDEX])
+                                        .caseSignificance(DESCRIPTION_NOT_CASE_SENSITIVE))
+                                .attach((Definition defn) -> defn
+                                        .language(ENGLISH_LANGUAGE)
+                                        .text(data[DEFINITION_INDEX])
+                                        .caseSignificance(CASE_SENSITIVE_EVALUATION))
+                                .attach((Identifier identifier) -> identifier
+                                        .identifier(data[CONCEPT_INDEX])
+                                        .source(newConcept)));
 
                     });
 
@@ -1055,7 +1124,7 @@ public class LoincStarterData {
 
 
     public void stopIngest() {
-        COMPOSER_SESSION_MANAGER.closeSession(session);
+        COMPOSER_SESSION_MANAGER.commitSession(session);
         PrimitiveData.stop();
     }
 

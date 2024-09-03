@@ -20,7 +20,8 @@ import dev.ikm.tinkar.common.service.PrimitiveData;
 import dev.ikm.tinkar.common.service.ServiceKeys;
 import dev.ikm.tinkar.common.service.ServiceProperties;
 import dev.ikm.tinkar.common.util.io.FileUtil;
-import dev.ikm.tinkar.composer.ComposerSessionManager;
+import dev.ikm.tinkar.composer.Composer;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class TestLoincStarterData  {
     public static final Function<String, File> createFilePathInTarget = (pathName) -> new File("%s/target/%s".formatted(System.getProperty("user.dir"), pathName));
     public static final File PB_STARTER_DATA = createFilePathInTarget.apply("data/tinkar-starter-data-1.0.0-pb.zip");
     public static final File DATASTORE = createFilePathInTarget.apply("generated-data/" + TestLoincStarterData.class.getSimpleName());
-    public final ComposerSessionManager COMPOSER_SESSION_MANAGER = new ComposerSessionManager();
+    public final Composer COMPOSER_SESSION_MANAGER = new Composer("LOINC Composer");
 
     public static LoincStarterData loincStarterData;
     @BeforeAll

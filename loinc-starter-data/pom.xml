@@ -19,7 +19,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tinkar-starter-data.version>1.0.0</tinkar-starter-data.version>
-    <tinkar-composer.version>1.0.0-SNAPSHOT</tinkar-composer.version>
+    <tinkar-composer.version>1.0.0</tinkar-composer.version>
     <loinc-starter-data.version>1.0.0</loinc-starter-data.version>
   </properties>
 <dependencyManagement>
