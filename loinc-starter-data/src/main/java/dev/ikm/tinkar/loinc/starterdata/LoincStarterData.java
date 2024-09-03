@@ -412,14 +412,7 @@ public class LoincStarterData {
         LOG.info(conceptCount + " LOINC Concepts were created");
     }
 
-    private String getDefinition(String[] data) {
-        String definition;
-        definition = data[DEFINITION_INDEX];
-        if (definition == null || definition.isEmpty()){
-            definition = " ";
-        }
-        return definition;
-    }
+
 
     private void addStatedDefinitionAndNavigation() {
 
@@ -1011,6 +1004,22 @@ public class LoincStarterData {
         }
 
         return synonym;
+    }
+
+    private String getDefinition(String[] data) {
+
+        String definition;
+        if (String.valueOf(data[DEFINITION_INDEX]).isEmpty() || String.valueOf(data[DEFINITION_INDEX]).isBlank()) {
+            definition = data[FQN_INDEX];
+        } else {
+            definition = data[DEFINITION_INDEX];
+        }
+
+        if (definition.isEmpty()){
+            definition = " ";
+        }
+
+        return definition;
     }
 
     private void buildLoincPatterns(StarterData starterData, UUIDUtility uuidUtility) {
