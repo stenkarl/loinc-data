@@ -17,7 +17,6 @@ open module loinc.starter.data {
    requires com.google.protobuf;
    requires dev.ikm.tinkar.schema;
    requires dev.ikm.tinkar.common;
-   requires dev.ikm.tinkar.composer;
    requires dev.ikm.tinkar.terms;
    requires org.slf4j;
 
