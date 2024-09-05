@@ -584,7 +584,7 @@ public class LoincStarterData {
     private void reasonOWLexpression(String owlString, int nid) {
         try {
             LOG.info("Attempting to reason this Ontology: ");
-            // LOG.info(owlString);
+            LOG.info(owlString);
             LogicalExpression expression = SctOwlUtilities.sctToLogicalExpression(owlString, "");
             // LOG.info(expression.toString());
             Transaction transaction = new Transaction("LOINC concept " + nid);

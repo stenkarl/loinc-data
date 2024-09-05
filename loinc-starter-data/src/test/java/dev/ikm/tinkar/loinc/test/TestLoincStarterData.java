@@ -40,7 +40,7 @@ public class TestLoincStarterData  {
     private static final Logger LOG = LoggerFactory.getLogger(TestLoincStarterData.class.getSimpleName());
 
     public static final Function<String, File> createFilePathInTarget = (pathName) -> new File("%s/target/%s".formatted(System.getProperty("user.dir"), pathName));
-    public static final File PB_STARTER_DATA = createFilePathInTarget.apply("data/tinkar-starter-data-1.0.0-pb.zip");
+    public static final File PB_STARTER_DATA = createFilePathInTarget.apply("../src/test/resources/tinkar-export-with-definitions-pb.zip");
     public static final File DATASTORE = createFilePathInTarget.apply("generated-data/" + TestLoincStarterData.class.getSimpleName());
     public final Composer COMPOSER_SESSION_MANAGER = new Composer("LOINC Composer");
 
