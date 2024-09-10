@@ -5,6 +5,7 @@ run-name: 'Build Workflow -- ${{ github.head_ref || github.ref_name }}'
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 env:
   BRANCH_NAME: ${{github.ref_name}}
@@ -20,16 +21,9 @@ jobs:
           java-version: '21'
           distribution: 'zulu'
 
-      - name: Maven Settings File
-        uses: whelk-io/maven-settings-xml-action@v22
-        with:
-          servers: '[{"id": "nexus", "username": "admin", "password": "${{secrets.EC2_NEXUS_PASSWORD}}"}]'
-          profiles: '[{"id": "inject-application-properties", "properties": {"altDeploymentRepository": "nexus::https://nexus.tinkarbuild.com/repository/maven-snapshots"}}]'
-          active_profiles: '["inject-application-properties"]' 
-          output_file: .m2/settings.xml
       
       - name: Build IKMDEV Code
         uses: ikmdev/maven-clean-install-build-action@loinc-data
         with:
           branch_name: ${{env.BRANCH_NAME}}
-          maven_settings: '/home/runner/work/${{github.event.repository.name}}/${{github.event.repository.name}}/.m2/settings.xml'
+          nexus_repo_password: "${{secrets.EC2_NEXUS_PASSWORD}}"
