@@ -23,7 +23,7 @@ jobs:
       - name: Maven Settings File
         uses: whelk-io/maven-settings-xml-action@v22
         with:
-          servers: '[{"id": "nexus", "username": "${{inputs.nexus_repo_username}}", "password": "${{secrets.EC2_NEXUS_PASSWORD}}"}]'
+          servers: '[{"id": "nexus", "username": "admin", "password": "${{secrets.EC2_NEXUS_PASSWORD}}"}]'
           profiles: '[{"id": "inject-application-properties", "properties": {"altDeploymentRepository": "nexus::https://nexus.tinkarbuild.com/repository/maven-snapshots"}}]'
           active_profiles: '["inject-application-properties"]' 
           output_file: .m2/settings.xml
