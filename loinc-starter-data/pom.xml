@@ -26,6 +26,7 @@
     <junit-jupiter-api.version>5.11.0</junit-jupiter-api.version>
     <junit.version>3.8.1</junit.version>
     <loinc-deps.version>1.8.0-SNAPSHOT</loinc-deps.version>
+    <java-uuid-generator.version>4.3.0</java-uuid-generator.version>
   </properties>
 <dependencyManagement>
   <dependencies>
@@ -105,6 +106,46 @@
       <artifactId>starter-data-builder</artifactId>
       <version>${starter-data-builder.version}</version>
     </dependency>
+
+    <!--Moved Depedencies Start-->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>entity-provider</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>executor-provider</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>composer</artifactId>
+      <version>${tinkar-composer.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.uuid</groupId>
+      <artifactId>java-uuid-generator</artifactId>
+      <version>${java-uuid-generator.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit-jupiter-api.version}</version>
+      <scope>test</scope>
+    </dependency>
+      <dependency>
+          <groupId>dev.ikm.tinkar</groupId>
+          <artifactId>common</artifactId>
+          <version>${tinkar-core.version}</version>
+          <scope>compile</scope>
+      </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>integration</artifactId>
+      <version>${tinkar-core.version}</version>
+    </dependency>
+    <!--Moved Depedencies End-->
   </dependencies>
 </dependencyManagement>
   <dependencies>
@@ -121,35 +162,27 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>entity-provider</artifactId>
-      <version>${tinkar-core.version}</version>
     </dependency>
-
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>executor-provider</artifactId>
-      <version>${tinkar-core.version}</version>
     </dependency>
-
     <dependency>
       <groupId>dev.ikm.tinkar</groupId>
       <artifactId>composer</artifactId>
-      <version>${tinkar-composer.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.uuid</groupId>
       <artifactId>java-uuid-generator</artifactId>
-      <version>4.3.0</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>${junit-jupiter-api.version}</version>
       <scope>test</scope>
     </dependency>
       <dependency>
           <groupId>dev.ikm.tinkar</groupId>
           <artifactId>common</artifactId>
-          <version>${tinkar-core.version}</version>
           <scope>compile</scope>
       </dependency>
     <!-- <dependency>
@@ -160,7 +193,6 @@
     <dependency>
       <groupId>dev.ikm.tinkar</groupId>
       <artifactId>integration</artifactId>
-      <version>${tinkar-core.version}</version>
     </dependency>
   </dependencies>
   <build>
