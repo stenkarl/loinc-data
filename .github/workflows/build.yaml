@@ -13,12 +13,23 @@ jobs:
   build-job:
     name: Build Job
     runs-on: ubuntu-24.04
+    if: github.repository_owner == 'ikmdev'
     steps:
       - uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'zulu'
+
+      - name: Maven Settings File
+        uses: whelk-io/maven-settings-xml-action@v22
+        with:
+          servers: '[{"id": "nexus", "username": "${{inputs.nexus_repo_username}}", "password": "${{secrets.EC2_NEXUS_PASSWORD}}"}]'
+          profiles: '[{"id": "inject-application-properties", "properties": {"altDeploymentRepository": "nexus::https://nexus.tinkarbuild.com/repository/maven-snapshots"}}]'
+          active_profiles: '["inject-application-properties"]' 
+          output_file: .m2/settings.xml
+      
       - name: Build IKMDEV Code
-        uses: ikmdev/maven-clean-install-build-action@main
+        uses: ikmdev/maven-clean-install-build-action@loinc-data
         with:
           branch_name: ${{env.BRANCH_NAME}}
+          maven_settings: '/home/runner/work/${{github.event.repository.name}}/${{github.event.repository.name}}/.m2/settings.xml'
