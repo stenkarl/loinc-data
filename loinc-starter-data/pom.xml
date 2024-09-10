@@ -98,15 +98,19 @@
       <artifactId>loinc-transformer-api</artifactId>
       <version>1.8.0-SNAPSHOT</version>
     </dependency>
-
-  </dependencies>
-</dependencyManagement>
-  <dependencies>
     <dependency>
       <groupId>dev.ikm.tinkar</groupId>
       <artifactId>starter-data-builder</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>${starter-data-builder.version}</version>
     </dependency>
+  </dependencies>
+</dependencyManagement>
+  <dependencies>
+    <!-- <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>starter-data-builder</artifactId>
+      <version>${starter-data-builder.version}</version>
+    </dependency> -->
     <dependency>
       <groupId>dev.ikm.tinkar</groupId>
       <artifactId>data-spinedarray-provider</artifactId>
@@ -146,11 +150,11 @@
           <version>${tinkar-core.version}</version>
           <scope>compile</scope>
       </dependency>
-    <dependency>
+    <!-- <dependency>
       <groupId>dev.ikm.tinkar</groupId>
       <artifactId>starter-data-builder</artifactId>
       <version>${starter-data-builder.version}</version>
-    </dependency>
+    </dependency> -->
     <dependency>
       <groupId>dev.ikm.tinkar</groupId>
       <artifactId>integration</artifactId>
