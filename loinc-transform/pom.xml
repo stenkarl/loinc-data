@@ -20,12 +20,22 @@
     <junit-jupiter-api.version>5.11.0</junit-jupiter-api.version>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${junit-jupiter-api.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>${junit-jupiter-api.version}</version>
-      <scope>test</scope>
+        <artifactId>junit-jupiter</artifactId>
+        <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
