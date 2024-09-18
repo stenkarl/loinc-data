@@ -119,11 +119,6 @@
       <version>${tinkar-core.version}</version>
     </dependency>
     <dependency>
-      <groupId>dev.ikm.tinkar</groupId>
-      <artifactId>composer</artifactId>
-      <version>${tinkar-composer.version}</version>
-    </dependency>
-    <dependency>
       <groupId>com.fasterxml.uuid</groupId>
       <artifactId>java-uuid-generator</artifactId>
       <version>${java-uuid-generator.version}</version>
@@ -140,16 +135,6 @@
           <version>${tinkar-core.version}</version>
           <scope>compile</scope>
       </dependency>
-    <dependency>
-      <groupId>dev.ikm.tinkar</groupId>
-      <artifactId>integration</artifactId>
-      <version>${tinkar-core.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.ikm.tinkar</groupId>
-      <artifactId>starter-data-builder</artifactId>
-      <version>${starter-data-builder.version}</version>
-    </dependency>
     <!--Moved Depedencies End-->
   </dependencies>
 </dependencyManagement>
