@@ -145,15 +145,15 @@
       <artifactId>integration</artifactId>
       <version>${tinkar-core.version}</version>
     </dependency>
+    <dependency>
+      <groupId>dev.ikm.tinkar</groupId>
+      <artifactId>starter-data-builder</artifactId>
+      <version>${starter-data-builder.version}</version>
+    </dependency>
     <!--Moved Depedencies End-->
   </dependencies>
 </dependencyManagement>
   <dependencies>
-    <!-- <dependency>
-      <groupId>dev.ikm.tinkar</groupId>
-      <artifactId>starter-data-builder</artifactId>
-      <version>${starter-data-builder.version}</version>
-    </dependency> -->
     <dependency>
       <groupId>dev.ikm.tinkar</groupId>
       <artifactId>data-spinedarray-provider</artifactId>
@@ -185,11 +185,10 @@
           <artifactId>common</artifactId>
           <scope>compile</scope>
       </dependency>
-    <!-- <dependency>
+    <dependency>
       <groupId>dev.ikm.tinkar</groupId>
       <artifactId>starter-data-builder</artifactId>
-      <version>${starter-data-builder.version}</version>
-    </dependency> -->
+    </dependency>
     <dependency>
       <groupId>dev.ikm.tinkar</groupId>
       <artifactId>integration</artifactId>
