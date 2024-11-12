@@ -20,9 +20,7 @@
     <name>LOINC Data Transformation</name>
 
     <modules>
-        <module>loinc-parser</module>
         <module>loinc-starter-data</module>
-        <module>loinc-transform</module>
     </modules>
 
     <properties>
