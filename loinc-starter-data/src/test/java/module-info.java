@@ -46,6 +46,8 @@ module dev.ikm.tinkar.loinc.test {
     requires org.slf4j;
     requires tinkar.sandbox;
 
+    requires dev.ikm.tinkar.provider.spinedarray;
+
     exports dev.ikm.tinkar.loinc.test;
 
     uses CachingService;
