@@ -43,15 +43,14 @@
         <common-java5.version>3.0.0-M9</common-java5.version>
         <protobuf-java.version>3.22.0-r3</protobuf-java.version>
         <jackson.version>2.14.2</jackson.version>
-        <eclipse-collections.version>11.1.0-r10</eclipse-collections.version>
-        <eclipse-collections-api.version>11.1.0-r7</eclipse-collections-api.version>
+        <eclipse-collections.version>11.1.0-r13</eclipse-collections.version>
+        <eclipse-collections-api.version>11.1.0-r11</eclipse-collections-api.version>
         <slf4j.version>2.0.13</slf4j.version>
         <asm.version>9.1</asm.version>
         <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
         <maven-build-helper.version>3.4.0</maven-build-helper.version>
         <maven-assembly-plugin.version>3.4.2</maven-assembly-plugin.version>
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
-        <eclipse-collections-api.version>11.1.0-r7</eclipse-collections-api.version>
         <starter-data-builder.version>1.0-SNAPSHOT</starter-data-builder.version>
         <apache-poi.version>5.2.5</apache-poi.version>
         <jxls-jexcel.version>1.0.9</jxls-jexcel.version>

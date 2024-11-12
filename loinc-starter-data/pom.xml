@@ -19,9 +19,9 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tinkar-starter-data.version>1.0.0</tinkar-starter-data.version>
-    <tinkar-core.version>1.68.0</tinkar-core.version>
-    <starter-data-builder.version>1.0-SNAPSHOT</starter-data-builder.version>
-    <tinkar-composer.version>1.0.0</tinkar-composer.version>
+    <tinkar-core.version>1.78.0</tinkar-core.version>
+    <starter-data-builder.version>1.0.0-SNAPSHOT</starter-data-builder.version>
+    <tinkar-composer.version>1.5.0</tinkar-composer.version>
     <loinc-starter-data.version>1.0.0</loinc-starter-data.version>
     <junit-jupiter-api.version>5.11.0</junit-jupiter-api.version>
     <junit.version>3.8.1</junit.version>

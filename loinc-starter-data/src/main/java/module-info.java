@@ -15,18 +15,17 @@
  */
 open module loinc.starter.data {
     exports dev.ikm.tinkar.loinc.starterdata;
+
     requires com.google.protobuf;
-   requires  com.fasterxml.uuid;
-   requires dev.ikm.tinkar.schema;
-   requires dev.ikm.tinkar.common;
-   requires dev.ikm.tinkar.composer;
-   requires dev.ikm.tinkar.terms;
-   requires org.slf4j;
-   requires tinkar.sandbox;
+    requires  com.fasterxml.uuid;
+    requires dev.ikm.tinkar.schema;
+    requires dev.ikm.tinkar.common;
+    requires dev.ikm.tinkar.composer;
+    requires dev.ikm.tinkar.terms;
+    requires org.slf4j;
+    requires tinkar.sandbox;
     requires dev.ikm.tinkar.entity;
-    requires org.eclipse.collections.api;
+    requires dev.ikm.jpms.eclipse.collections.api;
     requires dev.ikm.tinkar.coordinate;
     requires dev.ikm.tinkar.ext.lang.owl;
-
-
 }
