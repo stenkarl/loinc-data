@@ -41,11 +41,10 @@ module dev.ikm.tinkar.loinc.test {
     requires dev.ikm.tinkar.entity;
     requires dev.ikm.tinkar.provider.entity;
     requires org.junit.jupiter.api;
-    requires org.eclipse.collections.api;
+    requires dev.ikm.jpms.eclipse.collections.api;
     requires loinc.starter.data;
     requires org.slf4j;
     requires tinkar.sandbox;
-
 
     exports dev.ikm.tinkar.loinc.test;
 
